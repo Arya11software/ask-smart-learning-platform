@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initialize Identity | ASK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --bg-deep: #02060f;
+            --glass: rgba(15, 25, 45, 0.75);
+            --border: rgba(0, 242, 255, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            height: 100vh;
+            background: var(--bg-deep);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        /* Restored Interactive Neural Background */
+        #neuralCanvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        /* Glassmorphism Container */
+        .glass-card {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .logo-h1 {
+            font-size: 2.8rem;
+            letter-spacing: -2px;
+            margin-bottom: 2px;
+            background: linear-gradient(135deg, #fff 40%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle { 
+            color: var(--accent); 
+            font-size: 0.7rem; 
+            letter-spacing: 4px; 
+            margin-bottom: 30px; 
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; text-align: left; }
+        .full { grid-column: span 2; }
+
+        label { 
+            display: block; 
+            font-size: 0.6rem; 
+            font-weight: 800; 
+            margin-bottom: 8px; 
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        input, select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.85rem;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(0, 242, 255, 0.03);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+        }
+
+        select option { background: #0a1425; color: #fff; }
+
+        .submit-btn {
+            grid-column: span 2;
+            padding: 16px;
+            margin-top: 15px;
+            background: #fff;
+            color: var(--bg-deep);
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 242, 255, 0.4);
+        }
+
+        .login-link { margin-top: 25px; font-size: 0.8rem; color: #8899aa; }
+        .login-link a { color: var(--accent); text-decoration: none; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <canvas id="neuralCanvas"></canvas>
+
+    <div class="glass-card">
+        <h1 class="logo-h1">ASK.</h1>
+        <p class="subtitle">Initialize Identity</p>
+
+        <form id="regForm" class="form-grid">
+            <div class="field full">
+                <label>FULL LEGAL NAME</label>
+                <input type="text" id="userName" placeholder="e.g. Arya Deshmukh" required>
+            </div>
+            
+            <div class="field full">
+                <label>NETWORK EMAIL</label>
+                <input type="email" placeholder="name@domain.com" required>
+            </div>
+
+            <div class="field">
+                <label>PRIMARY SKILL</label>
+                <select required>
+                    <option value="" disabled selected>Select</option>
+                    <option>Frontend Development</option>
+                    <option>Backend Development</option>
+                    <option>Data Science</option>
+                    <option>UI/UX Design</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>LEVEL</label>
+                <select required>
+                    <option value="" disabled selected>Level</option>
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Expert</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>ACCESS KEY</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+
+            <div class="field">
+                <label>CONFIRM KEY</label>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Authorize Registration</button>
+        </form>
+
+        <p class="login-link">Existing Node? <a href="index.html">Portal Login</a></p>
+    </div>
+
+    <script>
+        // FORM REDIRECT LOGIC
+        document.getElementById('regForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            localStorage.setItem("studentName", document.getElementById('userName').value);
+            window.location.href = "dashboard.html";
+        });
+
+        // RESTORED PREVIOUS NEURAL BACKGROUND ENGINE
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let points = [];
+        const maxDist = 140;
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            points = [];
+            for (let i = 0; i < 90; i++) {
+                points.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < points.length; i++) {
+                let p = points[i];
+                p.x += p.vx; p.y += p.vy;
+
+                // Boundary bounce
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                // Draw Nodes
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.4)';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Connect nearby nodes with lines
+                for (let j = i + 1; j < points.length; j++) {
+                    let p2 = points[j];
+                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < maxDist) {
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${0.6 - dist/maxDist})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        animate();
+    </script>
+</body>
+</html>

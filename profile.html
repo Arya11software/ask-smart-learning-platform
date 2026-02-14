@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | ASK Smart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --bg-deep: #02060f;
+            --sidebar: rgba(10, 15, 29, 0.9);
+            --glass: rgba(15, 25, 45, 0.65);
+            --border: rgba(0, 242, 255, 0.15);
+            --game-color: #ff00c8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-deep); color: #fff; display: flex; height: 100vh; overflow: hidden; }
+        #neuralCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.4; }
+
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); backdrop-filter: blur(15px); display: flex; flex-direction: column; padding: 20px 0; z-index: 100; }
+        .logo-section { padding: 0 25px 40px; }
+        .logo-section h2 { font-size: 1.5rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item { padding: 15px 25px; color: #8899aa; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.3s; font-size: 0.9rem; }
+        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(0, 242, 255, 0.08); border-left: 4px solid var(--accent); }
+        .logout-link { margin-top: auto; color: #ff4757 !important; }
+
+        /* MAIN CONTENT */
+        .main-content { flex: 1; position: relative; padding: 40px; z-index: 10; overflow-y: auto; }
+        .header-area { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .header-area h1 { font-size: 2.2rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* PROFILE LAYOUT */
+        .profile-container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; }
+
+        .profile-card { 
+            background: var(--glass); border: 1px solid var(--border); border-radius: 24px; padding: 40px; 
+            backdrop-filter: blur(20px); text-align: center;
+        }
+        .avatar-circle { 
+            width: 120px; height: 120px; background: linear-gradient(45deg, var(--accent), var(--game-color)); 
+            border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; font-weight: 700; color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .details-card { 
+            background: var(--glass); border: 1px solid var(--border); border-radius: 24px; padding: 40px; 
+            backdrop-filter: blur(20px);
+        }
+
+        .info-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .info-row label { color: var(--accent); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; }
+        .info-row span { color: #fff; font-weight: 400; }
+
+        /* STATS GRID */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
+        .stat-item { 
+            background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 15px; text-align: center; 
+            border: 1px solid var(--border); transition: 0.3s;
+        }
+        .stat-item:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .stat-item h3 { font-size: 1.5rem; color: var(--accent); margin-bottom: 5px; }
+        .stat-item p { font-size: 0.75rem; color: #8899aa; text-transform: uppercase; }
+
+        .btn-edit { 
+            margin-top: 20px; background: var(--accent); color: var(--bg-deep); border: none; 
+            padding: 12px 30px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .btn-edit:hover { box-shadow: 0 0 20px var(--accent); }
+    </style>
+</head>
+<body>
+    <canvas id="neuralCanvas"></canvas>
+    
+    <div class="sidebar">
+        <div class="logo-section"><h2>ASK Smart.</h2></div>
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a href="roadmap.html" class="nav-item"><i class="fas fa-map-signs"></i> Roadmap</a>
+        <a href="lessons.html" class="nav-item"><i class="fas fa-book-open"></i> Lessons</a>
+        <a href="assessment.html" class="nav-item"><i class="fas fa-tasks"></i> Assessment</a>
+        <a href="results.html" class="nav-item"><i class="fas fa-chart-bar"></i> Results</a>
+        <a href="resume.html" class="nav-item"><i class="fas fa-file-invoice"></i> Resume Builder</a>
+        <a href="gamezone.html" class="nav-item"><i class="fas fa-gamepad"></i> Game Zone</a>
+        <a href="profile.html" class="nav-item active"><i class="fas fa-user-circle"></i> Profile</a>
+        <a href="#" id="logoutBtn" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header-area">
+            <h1>Account Profile</h1>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="avatar-circle" id="userInitial">U</div>
+                <h2 id="dispName" style="margin-bottom: 5px;">User Name</h2>
+                <p id="dispEmail" style="color: #8899aa; font-size: 0.9rem; margin-bottom: 25px;">email@example.com</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h3 id="statProgress">68%</h3>
+                        <p>Progress</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="statLessons">12</h3>
+                        <p>Lessons</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="statTests">05</h3>
+                        <p>Tasks</p>
+                    </div>
+                </div>
+                <button class="btn-edit" onclick="editProfile()">Update Details</button>
+            </div>
+
+            <div class="details-card">
+                <h3 style="margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Security & Registry</h3>
+                
+                <div class="info-row">
+                    <label>Unique ID</label>
+                    <span id="userId">#ASK-8821</span>
+                </div>
+                <div class="info-row">
+                    <label>Full Legal Name</label>
+                    <span id="fullName">User Name</span>
+                </div>
+                <div class="info-row">
+                    <label>Registered Email</label>
+                    <span id="fullEmail">email@example.com</span>
+                </div>
+                <div class="info-row">
+                    <label>Learning Track</label>
+                    <span id="learningTrack">Full Stack Development</span>
+                </div>
+                <div class="info-row">
+                    <label>Account Status</label>
+                    <span style="color: #00ff88;"><i class="fas fa-check-circle"></i> Optimized</span>
+                </div>
+                <div class="info-row">
+                    <label>Joined System</label>
+                    <span id="joinedDate">February 13, 2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Access information stored in registration (localStorage)
+            const userData = JSON.parse(localStorage.getItem('user'));
+            // If user isn't found, check for the simple 'userName' key used in other scripts
+            const userName = userData ? userData.name : localStorage.getItem('userName') || "User";
+            const userEmail = userData ? userData.email : "Not Provided";
+
+            // Update UI elements
+            document.getElementById('dispName').innerText = userName;
+            document.getElementById('fullName').innerText = userName;
+            document.getElementById('dispEmail').innerText = userEmail;
+            document.getElementById('fullEmail').innerText = userEmail;
+            document.getElementById('userInitial').innerText = userName.charAt(0).toUpperCase();
+
+            // Set dynamic date
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('joinedDate').innerText = new Date().toLocaleDateString(undefined, options);
+
+            // Fetch progress from dashboard stats if available
+            const savedProgress = localStorage.getItem('overallProgress') || "68%";
+            document.getElementById('statProgress').innerText = savedProgress;
+        });
+
+        function editProfile() {
+            const newName = prompt("Enter your updated name:", document.getElementById('fullName').innerText);
+            if(newName) {
+                localStorage.setItem('userName', newName);
+                location.reload();
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+
+        // Neural Background Animation
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            pts = Array.from({length: 40}, () => ({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5
+            }));
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pts.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.3)';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+        init(); draw();
+    </script>
+</body>
+</html>

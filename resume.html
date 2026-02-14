@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder | ASK Smart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --bg-deep: #02060f;
+            --sidebar: rgba(10, 15, 29, 0.9);
+            --glass: rgba(15, 25, 45, 0.65);
+            --border: rgba(0, 242, 255, 0.15);
+            --game-color: #ff00c8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-deep); color: #fff; display: flex; height: 100vh; overflow: hidden; }
+        #neuralCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.4; }
+
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); backdrop-filter: blur(15px); display: flex; flex-direction: column; padding: 20px 0; z-index: 100; }
+        .logo-section { padding: 0 25px 40px; }
+        .logo-section h2 { font-size: 1.5rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item { padding: 15px 25px; color: #8899aa; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.3s; font-size: 0.9rem; }
+        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(0, 242, 255, 0.08); border-left: 4px solid var(--accent); }
+        .nav-item.game-zone { color: var(--game-color); }
+        .logout-link { margin-top: auto; color: #ff4757 !important; }
+
+        /* MAIN LAYOUT */
+        .main-content { flex: 1; position: relative; padding: 30px; display: flex; flex-direction: column; z-index: 10; overflow: hidden; }
+        .header-area { margin-bottom: 20px; }
+        .header-area h1 { font-size: 2rem; font-weight: 800; color: #fff; }
+        .container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; flex: 1; overflow: hidden; }
+
+        /* EDITOR PANEL */
+        .editor-panel { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 25px; overflow-y: auto; backdrop-filter: blur(10px); }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; }
+        input, textarea { width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: #fff; font-size: 0.9rem; }
+        textarea { resize: none; min-height: 100px; }
+        
+        .action-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; }
+        .btn-primary { background: var(--accent); color: var(--bg-deep); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        .btn:hover { opacity: 0.8; box-shadow: 0 0 15px var(--accent); }
+
+        /* PREVIEW PANEL (A4 PROPORTION) */
+        .preview-panel { background: #e0e0e0; border-radius: 20px; padding: 20px; overflow-y: auto; display: flex; justify-content: center; }
+        #resume-canvas { 
+            width: 100%; 
+            max-width: 210mm; 
+            min-height: 297mm; 
+            background: #fff; 
+            color: #333; 
+            padding: 40px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .resume-header { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+        .resume-header h2 { font-size: 28px; text-transform: uppercase; color: #000; }
+        .resume-header p { font-size: 14px; color: #666; }
+        
+        .resume-section { margin-bottom: 20px; }
+        .resume-section h4 { border-left: 4px solid var(--accent); padding-left: 10px; margin-bottom: 10px; text-transform: uppercase; font-size: 14px; color: #000; }
+        .resume-section p { font-size: 13px; line-height: 1.6; color: #444; white-space: pre-line; }
+    </style>
+</head>
+<body>
+    <canvas id="neuralCanvas"></canvas>
+    <div class="sidebar">
+    <div class="logo-section"><h2>ASK Smart.</h2></div>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="roadmap.html" class="nav-item"><i class="fas fa-map-signs"></i> Roadmap</a>
+    <a href="lessons.html" class="nav-item"><i class="fas fa-book-open"></i> Lessons</a>
+    <a href="assessment.html" class="nav-item"><i class="fas fa-tasks"></i> Assessment</a>
+    <a href="results.html" class="nav-item"><i class="fas fa-chart-bar"></i> Results</a>
+    <a href="resume.html" class="nav-item"><i class="fas fa-file-invoice"></i> Resume Builder</a>
+    <a href="gamezone.html" class="nav-item game-zone"><i class="fas fa-gamepad"></i> Game Zone</a>
+   <a href="review.html" class="nav-item"><i class="fas fa-clipboard-check"></i> Review</a>
+    <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+    
+    <a href="#" id="logoutBtn" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+
+    <div class="main-content">
+        <div class="header-area">
+            <h1>Resume Builder</h1>
+        </div>
+
+        <div class="container">
+            <div class="editor-panel">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="inputName" placeholder="Enter your name" oninput="syncPreview()">
+                </div>
+                <div class="form-group">
+                    <label>Contact Email</label>
+                    <input type="email" id="inputEmail" placeholder="yourname@example.com" oninput="syncPreview()">
+                </div>
+                <div class="form-group">
+                    <label>Professional Skills</label>
+                    <textarea id="inputSkills" placeholder="List skills (e.g., React, Node.js, Python)" oninput="syncPreview()"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Key Projects</label>
+                    <textarea id="inputProjects" placeholder="Describe your best work..." oninput="syncPreview()"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Education</label>
+                    <textarea id="inputEducation" placeholder="Degree, University, Graduation Year" oninput="syncPreview()"></textarea>
+                </div>
+                
+                <div class="action-btns">
+                    <button class="btn btn-primary" onclick="downloadPDF()">
+                        <i class="fas fa-download"></i> Export PDF
+                    </button>
+                    <button class="btn btn-outline" onclick="resetForm()">Reset</button>
+                </div>
+            </div>
+
+            <div class="preview-panel">
+                <div id="resume-canvas">
+                    <div class="resume-header">
+                        <h2 id="pName">YOUR NAME</h2>
+                        <p id="pEmail">contact@email.com</p>
+                    </div>
+                    <div class="resume-section">
+                        <h4>Technical Skills</h4>
+                        <p id="pSkills">Your skills will appear here...</p>
+                    </div>
+                    <div class="resume-section">
+                        <h4>Experience & Projects</h4>
+                        <p id="pProjects">Project details will appear here...</p>
+                    </div>
+                    <div class="resume-section">
+                        <h4>Education</h4>
+                        <p id="pEducation">Educational background...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedName = localStorage.getItem('userName');
+            if (!savedName) {
+                window.location.href = 'index.html';
+                return;
+            }
+            document.getElementById('inputName').value = savedName;
+            syncPreview();
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('userName');
+                window.location.href = 'index.html';
+            });
+        });
+
+        function syncPreview() {
+            document.getElementById('pName').innerText = document.getElementById('inputName').value || 'YOUR NAME';
+            document.getElementById('pEmail').innerText = document.getElementById('inputEmail').value || 'contact@email.com';
+            document.getElementById('pSkills').innerText = document.getElementById('inputSkills').value || '—';
+            document.getElementById('pProjects').innerText = document.getElementById('inputProjects').value || '—';
+            document.getElementById('pEducation').innerText = document.getElementById('inputEducation').value || '—';
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('resume-canvas');
+            const opt = {
+                margin: 0,
+                filename: 'My_Resume_ASK_Smart.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function resetForm() {
+            if(confirm("Clear all data?")) {
+                document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+                syncPreview();
+            }
+        }
+
+        // Background Animation (Consistent with Dashboard)
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            pts = Array.from({length: 40}, () => ({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4
+            }));
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pts.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.3)';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+        window.onresize = init; init(); draw();
+    </script>
+</body>
+</html>

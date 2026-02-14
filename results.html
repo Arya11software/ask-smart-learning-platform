@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Results | ASK Smart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --bg-deep: #02060f;
+            --sidebar: rgba(10, 15, 29, 0.9);
+            --glass: rgba(15, 25, 45, 0.65);
+            --border: rgba(0, 242, 255, 0.15);
+            --game-color: #ff00c8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-deep); color: #fff; display: flex; height: 100vh; overflow: hidden; }
+
+        #neuralCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; }
+
+        /* SIDEBAR STYLES */
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); backdrop-filter: blur(15px); display: flex; flex-direction: column; padding: 20px 0; z-index: 100; }
+        .logo-section { padding: 0 25px 40px; }
+        .logo-section h2 { font-size: 1.5rem; letter-spacing: -1px; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .nav-item { padding: 15px 25px; color: #8899aa; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.3s; font-size: 0.9rem; border-left: 4px solid transparent; }
+        .nav-item:hover { color: #fff; background: rgba(0, 242, 255, 0.05); }
+        .nav-item.active { color: #fff; background: rgba(0, 242, 255, 0.08); border-left-color: var(--accent); }
+        .nav-item.game-zone { color: var(--game-color); font-weight: 600; }
+        .logout-link { margin-top: auto; color: #ff4757 !important; }
+
+        /* MAIN CONTENT */
+        .main-content { flex: 1; position: relative; padding: 40px; overflow-y: auto; z-index: 10; }
+        .header-area { margin-bottom: 35px; }
+        .header-area h1 { font-size: 2.4rem; font-weight: 800; }
+        .header-area span { color: var(--accent); text-shadow: 0 0 15px rgba(0, 242, 255, 0.4); text-transform: capitalize; }
+        .info { color: #8899aa; margin-top: 5px; font-size: 0.95rem; }
+
+        /* RESULTS GRID */
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .result-card { background: var(--glass); border: 1px solid var(--border); padding: 30px; border-radius: 24px; backdrop-filter: blur(20px); text-align: center; transition: transform 0.3s ease; }
+        .result-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+
+        .result-card h3 { color: var(--accent); letter-spacing: 1px; margin-bottom: 15px; font-size: 1.1rem; }
+        .score { font-size: 3rem; font-weight: 800; margin: 10px 0; background: linear-gradient(to bottom, #fff, #8899aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .status { font-size: 0.75rem; font-weight: 700; padding: 6px 16px; border-radius: 30px; display: inline-block; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .good { background: rgba(0, 255, 127, 0.1); color: #00ff7f; border: 1px solid rgba(0, 255, 127, 0.2); }
+        .average { background: rgba(255, 165, 0, 0.1); color: #ffa500; border: 1px solid rgba(255, 165, 0, 0.2); }
+        .poor { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.2); }
+
+        .result-card p { font-size: 0.85rem; color: #8899aa; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <canvas id="neuralCanvas"></canvas>
+    
+    <div class="sidebar">
+    <div class="logo-section"><h2>ASK Smart.</h2></div>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="roadmap.html" class="nav-item"><i class="fas fa-map-signs"></i> Roadmap</a>
+    <a href="lessons.html" class="nav-item"><i class="fas fa-book-open"></i> Lessons</a>
+    <a href="assessment.html" class="nav-item"><i class="fas fa-tasks"></i> Assessment</a>
+    <a href="results.html" class="nav-item"><i class="fas fa-chart-bar"></i> Results</a>
+    <a href="resume.html" class="nav-item"><i class="fas fa-file-invoice"></i> Resume Builder</a>
+    <a href="gamezone.html" class="nav-item game-zone"><i class="fas fa-gamepad"></i> Game Zone</a>
+   <a href="review.html" class="nav-item"><i class="fas fa-clipboard-check"></i> Review</a>
+    <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+    
+    <a href="#" id="logoutBtn" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+    <div class="main-content">
+        <div class="header-area">
+            <h1>Performance Summary for <span id="user-display">User</span></h1>
+            <p class="info">AI-driven analysis of your current technical skill gaps.</p>
+        </div>
+
+        <div class="results-grid">
+            <div class="result-card">
+                <h3>HTML</h3>
+                <div class="score">85%</div>
+                <span class="status good">Exceptional</span>
+                <p>Advanced structural knowledge confirmed. Ready for optimization tasks.</p>
+            </div>
+
+            <div class="result-card">
+                <h3>CSS</h3>
+                <div class="score">68%</div>
+                <span class="status average">Competent</span>
+                <p>Strong foundations, but needs focus on Flexbox and Grid animations.</p>
+            </div>
+
+            <div class="result-card">
+                <h3>JavaScript</h3>
+                <div class="score">52%</div>
+                <span class="status average">Practitioner</span>
+                <p>Logic is sound. Recommend focusing on Async/Await and DOM manipulation.</p>
+            </div>
+
+            <div class="result-card">
+                <h3>Data Structures</h3>
+                <div class="score">40%</div>
+                <span class="status poor">Entry Level</span>
+                <p>Fundamental understanding of Arrays exists. Focus on Trees and Graphs.</p>
+            </div>
+
+            <div class="result-card">
+                <h3>Algorithms</h3>
+                <div class="score">35%</div>
+                <span class="status poor">Critical Gap</span>
+                <p>Requires immediate attention. Focus on Big O notation and sorting logic.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // SECURITY CHECK & NAME DISPLAY
+            const savedName = localStorage.getItem('userName');
+            if (!savedName) {
+                window.location.href = 'index.html';
+                return;
+            }
+            document.getElementById('user-display').innerText = savedName;
+
+            // LOGOUT LOGIC
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('userName');
+                window.location.href = 'index.html';
+            });
+        });
+
+        // BACKGROUND ANIMATION
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            pts = Array.from({length: 60}, () => ({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5
+            }));
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pts.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.3)';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill();
+                for(let j=i+1; j<pts.length; j++){
+                    let d = Math.hypot(p.x-pts[j].x, p.y-pts[j].y);
+                    if(d < 150){
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${0.2 - d/150})`;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(draw);
+        }
+        window.onresize = init; init(); draw();
+    </script>
+</body>
+</html>

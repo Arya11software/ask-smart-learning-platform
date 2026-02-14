@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lessons | ASK Smart Learning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --bg-deep: #02060f;
+            --sidebar: rgba(10, 15, 29, 0.9);
+            --glass: rgba(15, 25, 45, 0.65);
+            --border: rgba(0, 242, 255, 0.15);
+            --game-color: #ff00c8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background: var(--bg-deep); 
+            color: #fff; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        #neuralCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; }
+
+        /* Sidebar Navigation */
+        .sidebar { 
+            width: 260px; 
+            background: var(--sidebar); 
+            border-right: 1px solid var(--border); 
+            backdrop-filter: blur(15px); 
+            display: flex; 
+            flex-direction: column; 
+            padding: 20px 0; 
+            z-index: 100; 
+        }
+        
+        .logo-section { padding: 0 25px 40px; }
+        .logo-section h2 { 
+            font-size: 1.5rem; 
+            letter-spacing: -1px; 
+            background: linear-gradient(to right, #fff, var(--accent)); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+
+        .nav-item { 
+            padding: 15px 25px; 
+            color: #8899aa; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            transition: 0.3s; 
+            font-size: 0.9rem; 
+            border-left: 4px solid transparent; 
+        }
+        
+        .nav-item:hover { color: #fff; background: rgba(0, 242, 255, 0.05); }
+        .nav-item.active { color: #fff; background: rgba(0, 242, 255, 0.08); border-left-color: var(--accent); }
+        
+        .nav-item.game-zone { color: var(--game-color); font-weight: 600; }
+        .nav-item.game-zone i { animation: pulse 2s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+        }
+
+        /* Main Content */
+        .main { 
+            flex: 1; 
+            position: relative; 
+            padding: 40px; 
+            overflow-y: auto; 
+            z-index: 10; 
+        }
+
+        .header-area { margin-bottom: 35px; }
+        .header-area h1 { font-size: 2.4rem; font-weight: 800; }
+        .header-area span { color: var(--accent); text-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
+
+        .lessons-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+
+        /* Enhanced Lesson Cards */
+        .lesson-card { 
+            background: var(--glass); 
+            border: 1px solid var(--border); 
+            padding: 30px; 
+            border-radius: 24px; 
+            backdrop-filter: blur(20px);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.15);
+        }
+
+        .lesson-card h3 { 
+            font-size: 1.3rem;
+            color: var(--accent); 
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lesson-card p { 
+            color: #8899aa; 
+            font-size: 0.95rem; 
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .lesson-card button { 
+            width: 100%;
+            padding: 14px; 
+            border: 1px solid var(--accent); 
+            border-radius: 12px; 
+            background: rgba(0, 242, 255, 0.05); 
+            color: var(--accent); 
+            font-weight: 700;
+            cursor: pointer; 
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .lesson-card button:hover { 
+            background: var(--accent); 
+            color: var(--bg-deep);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        .logout-link { margin-top: auto; color: #ff4757; }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="neuralCanvas"></canvas>
+
+    <div class="sidebar">
+    <div class="logo-section"><h2>ASK Smart.</h2></div>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="roadmap.html" class="nav-item"><i class="fas fa-map-signs"></i> Roadmap</a>
+    <a href="lessons.html" class="nav-item"><i class="fas fa-book-open"></i> Lessons</a>
+    <a href="assessment.html" class="nav-item"><i class="fas fa-tasks"></i> Assessment</a>
+    <a href="results.html" class="nav-item"><i class="fas fa-chart-bar"></i> Results</a>
+    <a href="resume.html" class="nav-item"><i class="fas fa-file-invoice"></i> Resume Builder</a>
+    <a href="gamezone.html" class="nav-item game-zone"><i class="fas fa-gamepad"></i> Game Zone</a>
+   <a href="review.html" class="nav-item"><i class="fas fa-clipboard-check"></i> Review</a>
+    <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+    
+    <a href="#" id="logoutBtn" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+    <div class="main">
+        <div class="header-area">
+            <h1>Module <span>Lessons</span></h1>
+            <p style="color: #8899aa; font-size: 0.9rem;">Select a topic to begin your focused learning session.</p>
+        </div>
+
+        <div class="lessons-grid">
+            <div class="lesson-card">
+                <h3><i class="fab fa-html5"></i> HTML Basics</h3>
+                <p>Learn the semantic structure of modern web pages using HTML5 elements and accessibility best practices.</p>
+                <button>Launch Module</button>
+            </div>
+
+            <div class="lesson-card">
+                <h3><i class="fab fa-css3-alt"></i> CSS Fundamentals</h3>
+                <p>Master layouts with Flexbox and Grid, and learn to apply beautiful styles and animations to your UI.</p>
+                <button>Launch Module</button>
+            </div>
+
+            <div class="lesson-card">
+                <h3><i class="fab fa-js"></i> JavaScript Essentials</h3>
+                <p>Understand core logic, variables, and ES6+ features that power modern web interactivity.</p>
+                <button>Launch Module</button>
+            </div>
+
+            <div class="lesson-card">
+                <h3><i class="fas fa-code-branch"></i> DOM Manipulation</h3>
+                <p>Learn how to dynamically change page content and handle user events through the Document Object Model.</p>
+                <button>Launch Module</button>
+            </div>
+
+            <div class="lesson-card">
+                <h3><i class="fas fa-database"></i> Data Structures</h3>
+                <p>Deep dive into efficient data organization using Arrays, Linked Lists, Stacks, and Queues.</p>
+                <button>Launch Module</button>
+            </div>
+
+            <div class="lesson-card">
+                <h3><i class="fas fa-microchip"></i> Algorithms</h3>
+                <p>Optimize your code with advanced sorting, searching, and complex problem-solving patterns.</p>
+                <button>Launch Module</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* Shared Neural Network Animation */
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            pts = Array.from({length: 80}, () => ({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4
+            }));
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pts.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2); ctx.fill();
+                for(let j=i+1; j<pts.length; j++){
+                    let d = Math.hypot(p.x-pts[j].x, p.y-pts[j].y);
+                    if(d < 150){
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${0.25 - d/150})`;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(draw);
+        }
+        window.onresize = init; init(); draw();
+    </script>
+</body>
+</html>

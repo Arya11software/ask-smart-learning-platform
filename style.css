@@ -1,0 +1,117 @@
+:root {
+  --primary-glow: #ffcc00; /* Your signature yellow */
+  --bg-dark: #050505;
+  --card-bg: #0d0d0d;
+  --input-bg: #151515;
+  --text-dim: #888;
+}
+
+body {
+  background-color: var(--bg-dark);
+  /* Subtle grid pattern background */
+  background-image: 
+    linear-gradient(rgba(255, 204, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 204, 0, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* The Main Container */
+.login-card {
+  background: var(--card-bg);
+  padding: 3rem;
+  border-radius: 4px; /* Sharper edges for a tech look */
+  border-left: 4px solid var(--primary-glow); /* Accent border */
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pseudo-element for a subtle top-right glow */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 100px;
+  height: 100px;
+  background: var(--primary-glow);
+  filter: blur(60px);
+  opacity: 0.2;
+}
+
+h1 {
+  color: #fff;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+/* Cyber-styled Inputs */
+.input-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid #222;
+  padding: 15px;
+  color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  font-family: monospace; /* Gives it a "terminal" feel */
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary-glow);
+  background: #1a1a1a;
+  box-shadow: inset 0 0 5px rgba(255, 204, 0, 0.1);
+}
+
+/* The Action Button */
+.portal-button {
+  width: 100%;
+  padding: 16px;
+  background: var(--primary-glow);
+  color: #000;
+  border: none;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: 0.4s;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%); /* Beveled corner */
+}
+
+.portal-button:hover {
+  letter-spacing: 5px;
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+}
+
+/* Social Login Divider */
+.divider {
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.divider::before, .divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #222;
+  margin: 0 10px;
+}

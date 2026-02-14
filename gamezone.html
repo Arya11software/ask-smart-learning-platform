@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Zone | ASK Smart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --bg-deep: #02060f;
+            --sidebar: rgba(10, 15, 29, 0.9);
+            --glass: rgba(15, 25, 45, 0.65);
+            --border: rgba(0, 242, 255, 0.15);
+            --game-pink: #ff00c8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-deep); color: #fff; display: flex; height: 100vh; overflow: hidden; }
+        #neuralCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.4; }
+
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); backdrop-filter: blur(15px); display: flex; flex-direction: column; padding: 20px 0; z-index: 100; }
+        .logo-section { padding: 0 25px 40px; }
+        .logo-section h2 { font-size: 1.5rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item { padding: 15px 25px; color: #8899aa; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.3s; font-size: 0.9rem; }
+        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(0, 242, 255, 0.08); border-left: 4px solid var(--accent); }
+        .nav-item.game-zone { color: var(--game-pink); font-weight: 700; border-left-color: var(--game-pink); }
+        .logout-link { margin-top: auto; color: #ff4757 !important; }
+
+        /* MAIN CONTENT */
+        .main-content { flex: 1; position: relative; padding: 40px; z-index: 10; overflow-y: auto; }
+        .header-area { margin-bottom: 30px; }
+        .header-area h1 { font-size: 2.2rem; color: var(--game-pink); text-shadow: 0 0 15px rgba(255, 0, 200, 0.4); }
+
+        /* GAME SELECTION GRID */
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .game-card { 
+            background: var(--glass); 
+            border: 1px solid var(--border); 
+            border-radius: 20px; 
+            padding: 30px; 
+            text-align: center; 
+            transition: 0.3s; 
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-card:hover { 
+            transform: translateY(-10px); 
+            border-color: var(--game-pink); 
+            box-shadow: 0 10px 30px rgba(255, 0, 200, 0.2); 
+        }
+        .game-card i { font-size: 3rem; color: var(--game-pink); margin-bottom: 20px; }
+        .game-card h3 { margin-bottom: 10px; font-size: 1.3rem; }
+        .game-card p { color: #8899aa; font-size: 0.85rem; line-height: 1.5; }
+        
+        .play-btn { 
+            margin-top: 20px; 
+            background: transparent; 
+            border: 1px solid var(--game-pink); 
+            color: var(--game-pink); 
+            padding: 8px 20px; 
+            border-radius: 20px; 
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .game-card:hover .play-btn { background: var(--game-pink); color: #fff; }
+
+        /* OVERLAY FOR GAMES */
+        #gameOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 1000;
+            display: none; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="neuralCanvas"></canvas>
+    
+    <div class="sidebar">
+        <div class="logo-section"><h2>ASK Smart.</h2></div>
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a href="roadmap.html" class="nav-item"><i class="fas fa-map-signs"></i> Roadmap</a>
+        <a href="lessons.html" class="nav-item"><i class="fas fa-book-open"></i> Lessons</a>
+        <a href="assessment.html" class="nav-item"><i class="fas fa-tasks"></i> Assessment</a>
+        <a href="results.html" class="nav-item"><i class="fas fa-chart-bar"></i> Results</a>
+        <a href="gamezone.html" class="nav-item active game-zone"><i class="fas fa-gamepad"></i> Game Zone</a>
+        <a href="review.html" class="nav-item"><i class="fas fa-clipboard-check"></i> Review</a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+        <a href="#" id="logoutBtn" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header-area">
+            <h1>Game Zone</h1>
+            <p style="color: #8899aa;">Sharpen your developer instincts with coding-themed challenges.</p>
+        </div>
+
+        <div class="game-grid">
+            <div class="game-card" onclick="openGame('Terminal Smasher')">
+                <i class="fas fa-terminal"></i>
+                <h3>Terminal Smasher</h3>
+                <p>Speed-type syntax keywords to fix system breaches before the timer hits zero.</p>
+                <button class="play-btn">PLAY NOW</button>
+            </div>
+
+            <div class="game-card" onclick="openGame('Syntax Sniper')">
+                <i class="fas fa-bug"></i>
+                <h3>Syntax Sniper</h3>
+                <p>Identify the hidden bug in 5 lines of code. Precision and speed are your only weapons.</p>
+                <button class="play-btn">PLAY NOW</button>
+            </div>
+
+            <div class="game-card" onclick="openGame('Binary Dash')">
+                <i class="fas fa-microchip"></i>
+                <h3>Binary Dash</h3>
+                <p>Quickly decode 4-bit binary strings into decimals to unlock encrypted data gates.</p>
+                <button class="play-btn">PLAY NOW</button>
+            </div>
+
+            <div class="game-card" onclick="openGame('Git Commando')">
+                <i class="fas fa-code-branch"></i>
+                <h3>Git Commando</h3>
+                <p>Deploy the correct Git commands to resolve merge conflicts and save the master branch.</p>
+                <button class="play-btn">PLAY NOW</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameOverlay">
+        <div style="text-align: center;">
+            <h1 id="gameTitle" style="color: var(--game-pink); margin-bottom: 20px;"></h1>
+            <p style="margin-bottom: 30px;">Initializing secure game environment...</p>
+            <button class="play-btn" onclick="closeGame()">EXIT TO HUB</button>
+        </div>
+    </div>
+
+    <script>
+        function openGame(name) {
+            document.getElementById('gameOverlay').style.display = 'flex';
+            document.getElementById('gameTitle').innerText = name;
+        }
+
+        function closeGame() {
+            document.getElementById('gameOverlay').style.display = 'none';
+        }
+
+        // Background Animation
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            pts = Array.from({length: 40}, () => ({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5
+            }));
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pts.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
+                ctx.fillStyle = 'rgba(255, 0, 200, 0.2)';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+        init(); draw();
+        
+        // Security
+        if(!localStorage.getItem('userName')) window.location.href = 'index.html';
+    </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap | ASK Smart Learning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --bg-deep: #02060f;
+            --sidebar: rgba(10, 15, 29, 0.9);
+            --glass: rgba(15, 25, 45, 0.65);
+            --border: rgba(0, 242, 255, 0.15);
+            --game-color: #ff00c8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-deep); color: #fff; display: flex; height: 100vh; overflow: hidden; }
+
+        #neuralCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.6; }
+
+        /* Sidebar Navigation */
+        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); backdrop-filter: blur(15px); display: flex; flex-direction: column; padding: 20px 0; z-index: 100; }
+        .logo-section { padding: 0 25px 40px; }
+        .logo-section h2 { font-size: 1.5rem; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .nav-item { padding: 15px 25px; color: #8899aa; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.3s; font-size: 0.9rem; border-left: 4px solid transparent; }
+        .nav-item:hover { color: #fff; background: rgba(0, 242, 255, 0.05); }
+        .nav-item.active { color: #fff; background: rgba(0, 242, 255, 0.08); border-left-color: var(--accent); }
+
+        .nav-item.game-zone { color: var(--game-color); font-weight: 600; }
+        .nav-item.game-zone i { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.8; } }
+
+        /* Roadmap Layout */
+        .main-content { flex: 1; position: relative; padding: 40px; overflow-y: auto; z-index: 10; }
+        .header-area { margin-bottom: 50px; }
+        .header-area h1 { font-size: 2.4rem; font-weight: 800; }
+        .header-area span { color: var(--accent); }
+
+        .roadmap-container { position: relative; max-width: 800px; margin: 0 auto; padding-left: 50px; }
+        .roadmap-line { position: absolute; left: 20px; top: 0; width: 2px; height: 100%; background: linear-gradient(to bottom, var(--accent), transparent); }
+
+        /* Roadmap Milestone */
+        .milestone {
+            position: relative;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(20px);
+            transition: 0.3s;
+        }
+        .milestone:hover { border-color: var(--accent); transform: translateX(10px); box-shadow: 0 0 20px rgba(0, 242, 255, 0.1); }
+        
+        .milestone::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 30px;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .milestone h3 { color: var(--accent); margin-bottom: 8px; font-size: 1.2rem; }
+        .milestone p { color: #8899aa; font-size: 0.9rem; margin-bottom: 15px; }
+
+        .lesson-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent);
+            transition: 0.3s;
+        }
+        .lesson-link:hover:not(.locked-btn) { background: var(--accent); color: var(--bg-deep); }
+        .locked-btn { opacity: 0.5; cursor: not-allowed; border-color: #555; color: #888; background: transparent; }
+
+        .status-tag { float: right; font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); color: #8899aa; }
+        .status-tag.complete { color: #00ff88; background: rgba(0, 255, 136, 0.1); }
+        .status-tag.in-progress { color: var(--accent); background: rgba(0, 242, 255, 0.1); }
+
+        .logout-link { margin-top: auto; color: #ff4757; }
+    </style>
+</head>
+<body>
+
+    <canvas id="neuralCanvas"></canvas>
+
+    <div class="sidebar">
+        <div class="logo-section"><h2>ASK Smart.</h2></div>
+        <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a href="roadmap.html" class="nav-item active"><i class="fas fa-map-signs"></i> Roadmap</a>
+        <a href="lessons.html" class="nav-item"><i class="fas fa-book-open"></i> Lessons</a>
+        <a href="assessment.html" class="nav-item"><i class="fas fa-tasks"></i> Assessment</a>
+        <a href="results.html" class="nav-item"><i class="fas fa-chart-bar"></i> Results</a>
+        <a href="resume.html" class="nav-item"><i class="fas fa-file-invoice"></i> Resume Builder</a>
+        <a href="gamezone.html" class="nav-item game-zone"><i class="fas fa-gamepad"></i> Game Zone</a>
+        <a href="review.html" class="nav-item"><i class="fas fa-clipboard-check"></i> Review</a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+        <a href="#" id="logoutBtn" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header-area">
+            <h1>Your <span id="dynamicPathTitle">Career Roadmap</span></h1>
+            <p id="pathDescription" style="color: #8899aa; margin-top: 5px;">Follow the path to master your domain.</p>
+        </div>
+
+        <div class="roadmap-container" id="roadmapContainer">
+            <div class="roadmap-line"></div>
+            </div>
+    </div>
+
+    <script>
+        // 1. NEURAL BACKGROUND
+        const canvas = document.getElementById('neuralCanvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            pts = Array.from({length: 80}, () => ({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4
+            }));
+        }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pts.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
+                ctx.beginPath(); ctx.arc(p.x, p.y, 1.2, 0, Math.PI*2); ctx.fill();
+                for(let j=i+1; j<pts.length; j++){
+                    let d = Math.hypot(p.x-pts[j].x, p.y-pts[j].y);
+                    if(d < 150){
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${0.25 - d/150})`;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(draw);
+        }
+        window.onresize = init; init(); draw();
+
+        // 2. DYNAMIC ROADMAP LOGIC
+        document.addEventListener("DOMContentLoaded", () => {
+            const userData = JSON.parse(localStorage.getItem('user'));
+            const domain = userData ? userData.track : "Full Stack Development";
+            
+            document.getElementById('dynamicPathTitle').innerText = `${domain} Roadmap`;
+            document.getElementById('pathDescription').innerText = `Follow this personalized path for ${domain}.`;
+
+            const roadmaps = {
+                "Frontend Development": [
+                    { phase: "Phase 1: UI foundations", desc: "Master HTML5 structural language and CSS responsiveness.", status: "complete", tag: "Completed" },
+                    { phase: "Phase 2: JavaScript Mastery", desc: "Deep dive into ES6 syntax and DOM manipulation techniques.", status: "in-progress", tag: "In Progress" },
+                    { phase: "Phase 3: React Ecosystem", desc: "Building component-based architectures and state management.", status: "locked", tag: "Locked" }
+                ],
+                "Backend Development": [
+                    { phase: "Phase 1: Server Logic", desc: "Node.js environment setup and Express framework fundamentals.", status: "complete", tag: "Completed" },
+                    { phase: "Phase 2: Data Architecture", desc: "Designing scalable SQL and NoSQL database schemas.", status: "in-progress", tag: "In Progress" },
+                    { phase: "Phase 3: Cloud & Security", desc: "JWT Authentication and deploying to AWS/Heroku.", status: "locked", tag: "Locked" }
+                ],
+                "Full Stack Development": [
+                    { phase: "Phase 1: Web Foundations", desc: "Master HTML structural language and CSS responsiveness.", status: "complete", tag: "Completed" },
+                    { phase: "Phase 2: Logic & Database", desc: "Synchronizing JS logic with backend data stores.", status: "in-progress", tag: "In Progress" },
+                    { phase: "Phase 3: Integration", desc: "Building full-scale MERN/PERN applications.", status: "locked", tag: "Locked" }
+                ]
+            };
+
+            const container = document.getElementById('roadmapContainer');
+            const selectedPath = roadmaps[domain] || roadmaps["Full Stack Development"];
+
+            // Preserve the roadmap line
+            container.innerHTML = '<div class="roadmap-line"></div>';
+
+            selectedPath.forEach(item => {
+                const milestone = document.createElement('div');
+                milestone.className = 'milestone';
+                
+                const isLocked = item.status === 'locked';
+                
+                milestone.innerHTML = `
+                    <span class="status-tag ${item.status}">${item.tag}</span>
+                    <h3>${item.phase}</h3>
+                    <p>${item.desc}</p>
+                    <a href="${isLocked ? '#' : 'lessons.html'}" class="lesson-link ${isLocked ? 'locked-btn' : ''}">
+                        <i class="fas ${isLocked ? 'fa-lock' : 'fa-play'}"></i> 
+                        ${isLocked ? 'Locked' : 'Launch Lesson'}
+                    </a>
+                `;
+                container.appendChild(milestone);
+            });
+        });
+
+        // 3. LOGOUT LOGIC
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

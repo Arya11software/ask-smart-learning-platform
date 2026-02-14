@@ -1,5 +1,11 @@
 # ASK Smart Learning Platform
 
+![Dashboard Preview](./screenshot.png)
+
+---
+
+# ASK Smart Learning Platform
+
 🔗 **Live Demo:** https://arya11software.github.io/ask-smart-learning-platform/
 
 A system-designed, modular skill intelligence platform built using HTML, CSS, and JavaScript.  
